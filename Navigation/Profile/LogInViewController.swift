@@ -89,14 +89,8 @@ class LogInViewController: UIViewController {
         return button
     }()
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.navigationController?.navigationBar.isHidden = false
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.isHidden = true
         
         view.addSubview(scrollView)
         scrollView.addSubview(containerView)
@@ -151,6 +145,7 @@ class LogInViewController: UIViewController {
     /// Keyboard observers
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -166,9 +161,8 @@ class LogInViewController: UIViewController {
     // MARK: Keyboard actions
     @objc fileprivate func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            
-            scrollView.contentInset.bottom = keyboardSize.height
-            scrollView.verticalScrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+            scrollView.contentInset.bottom = keyboardSize.height - view.safeAreaInsets.bottom
+            scrollView.verticalScrollIndicatorInsets = UIEdgeInsets(top: 0 , left: 0, bottom: keyboardSize.height - view.safeAreaInsets.bottom, right: 0)
         }
     }
     
